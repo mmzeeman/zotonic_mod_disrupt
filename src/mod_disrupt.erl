@@ -23,4 +23,4 @@
 -mod_description("Creates disrupt in the system, like randomly killing things.").
 -mod_provides([disrupt]).
 -mod_depends([admin]).
--mod_prio(5).
+-mod_prio(300).
