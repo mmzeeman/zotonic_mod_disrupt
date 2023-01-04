@@ -1,0 +1,10 @@
+{application, zotonic_mod_disrupt, [
+    {description, "Module to disrupt things in the system."},
+    {vsn, "git"},
+    {registerered, []},
+    {applications, [kernel, stdlib, zotonic_core, havoc]},
+    {env, []},
+    {modules, []},
+    {maintainers, []}
+]}.
+
