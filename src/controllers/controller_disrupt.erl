@@ -129,13 +129,25 @@ disrupt(Function, Context) ->
         throw ->
             throw({controller_disrupt, throw});
         latency ->
-            timer:sleep(rand:uniform(100)),
+            timer:sleep(latency(Context)),
             delegate(Function, Context)
     end.
 
 %%
 %% Helpers
 %%
+
+latency(Context) ->
+    case rand:normal(latency_mean(Context), latency_variance(Context)) of
+        N when N < 0 -> 0;
+        M -> z_convert:to_integer(M)
+    end.
+
+latency_mean(Context) ->
+    m_config:get_value(mod_disrupt, latency_mean, 300, Context).
+
+latency_variance(Context) ->
+    m_config:get_value(mod_disrupt, latency_variance, 400, Context).
 
 delegate(Function, Context) ->
     Module = z_context:get(delegate, Context),
