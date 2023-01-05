@@ -25,4 +25,33 @@
 -mod_depends([admin]).
 -mod_prio(300).
 
+-include_lib("zotonic_core/include/zotonic.hrl").
+
+-export([
+    init/1,
+    observe_m_config_update/2
+]).
+
+init(Context) ->
+    maybe_enable_disruptor(Context),
+    ok.
+
+observe_m_config_update(#m_config_update{module = <<"mod_disrupt">>, key = <<"disruptor">>}, Context) ->
+    Context1 = case maybe_enable_disruptor(Context) of
+                   true ->
+                       z_render:growl(?__("Disruptor enabled.", Context), Context);
+                   false ->
+                       z_render:growl(?__("Disruptor disabled.", Context), Context)
+               end,
+    Script = iolist_to_binary( z_render:get_script(Context1) ),
+    z_mqtt:publish([ <<"~client">>, <<"zotonic-transport">>, <<"eval">> ], Script, Context);
+
+observe_m_config_update(#m_config_update{}, _Context) ->
+    undefined.
+    
+maybe_enable_disruptor(Context) ->
+    case m_config:get_boolean(mod_disrupt, disruptor, Context) of
+        true -> havoc:on(), true;
+        false -> havoc:off(), false
+    end.
 
