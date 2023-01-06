@@ -54,6 +54,8 @@
     generate_etag/1,
     finish_request/1,
 
+    websocket_start/1, % Extra export needed for mqtt controller.
+
     process/4
 ]).
 
@@ -97,6 +99,9 @@ last_modified(Context) -> delegate(?FUNCTION_NAME, Context).
 expires(Context) -> delegate(?FUNCTION_NAME, Context). 
 generate_etag(Context) -> delegate(?FUNCTION_NAME, Context). 
 finish_request(Context) -> delegate(?FUNCTION_NAME, Context). 
+
+% extra export needed for controller_mqtt_transport
+websocket_start(Context) -> delegate(?FUNCTION_NAME, Context).
 
 %% 
 allowed_methods(Context) ->

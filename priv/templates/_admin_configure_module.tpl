@@ -4,7 +4,7 @@
         <label class="control-label">
             <input type="checkbox"
                    id="{{ #config.disruptor }}" {% if m.config.mod_disrupt.disruptor.value %}checked{% endif %} />
-            {_ Disruptor Enabled _}
+            {_ Run Disruptor (Havoc) _}
         </label>
     </div>
 </div>
