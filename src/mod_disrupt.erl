@@ -33,7 +33,7 @@
 ]).
 
 init(Context) ->
-    % maybe_enable_disruptor(Context),
+    maybe_enable_disruptor(Context),
     ok.
 
 observe_m_config_update(#m_config_update{module = <<"mod_disrupt">>, key = <<"disruptor">>}, Context) ->
@@ -49,9 +49,16 @@ observe_m_config_update(#m_config_update{module = <<"mod_disrupt">>, key = <<"di
 observe_m_config_update(#m_config_update{}, _Context) ->
     undefined.
     
-%maybe_enable_disruptor(Context) ->
-%    case m_config:get_boolean(mod_disrupt, disruptor, Context) of
-%        true -> havoc:on(), true;
-%        false -> havoc:off(), false
-%    end.
+maybe_enable_disruptor(Context) ->
+    Enable = m_config:get_boolean(mod_disrupt, disruptor, Context),
+    activate_disruptor(Enable),
+    Enable.
+
+activate_disruptor(Enable) ->
+    case {Enable, havoc:is_active()} of
+        {true, false} -> havoc:on();
+        {false, true} -> havoc:off();
+        {true, true} -> ok;
+        {false, false} -> ok 
+    end.
 
