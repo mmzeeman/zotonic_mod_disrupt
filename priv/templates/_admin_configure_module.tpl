@@ -7,18 +7,6 @@
             {_ Run Disruptor (Havoc) _}
         </label>
     </div>
-
-    {# 
-    <div class="form-group">
-        {% wire type="click" id=#dispatch_disruption action={config_toggle module="mod_disrupt" key="dispatch_disruption"} %}
-        <label class="control-label">
-            <input type="checkbox"
-                   id="{{ #dispatch_disruption }}" {% if m.config.mod_disrupt.dispatch_disruption.value %}checked{% endif %} />
-            {_ Base Dispatch Disruption Enabled _}
-        </label>
-    </div>
-    #}
-
 </div>
 
 <div class="modal-footer">

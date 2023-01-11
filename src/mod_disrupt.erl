@@ -29,7 +29,8 @@
 
 -export([
     init/1,
-    observe_m_config_update/2
+    observe_m_config_update/2,
+    is_killable/1
 ]).
 
 init(Context) ->
@@ -56,9 +57,22 @@ maybe_enable_disruptor(Context) ->
 
 activate_disruptor(Enable) ->
     case {Enable, havoc:is_active()} of
-        {true, false} -> havoc:on();
+        {true, false} -> havoc:on([{killable_callback, fun(Pid) -> ?MODULE:is_killable(Pid) end}]);
         {false, true} -> havoc:off();
         {true, true} -> ok;
         {false, false} -> ok 
     end.
+
+
+is_linked_to_init(Pid) ->
+    InitPid = whereis(init),
+    case erlang:process_info(InitPid, links) of
+        {links, Linked} when is_list(Linked) ->
+            lists:member(Pid, Linked);
+        _ ->
+            false
+    end.
+
+is_killable(Pid) ->
+    not is_linked_to_init(Pid).
 
